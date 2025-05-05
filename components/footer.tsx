@@ -48,7 +48,7 @@ export default function Footer() {
               </motion.a>
               <motion.a
                 whileHover={{ x: 5 }}
-                href="https://3dportfolio.ishav.space"
+                href="https://portfolio.ishav.space"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -77,7 +77,7 @@ export default function Footer() {
               </motion.a>
               <motion.a
                 whileHover={{ x: 5 }}
-                href="https://github.com/0053ishav/projects-api"
+                href="https://github.com/0053ishav/projects"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"
