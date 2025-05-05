@@ -1,21 +1,31 @@
-import { NextResponse } from "next/server"
-import { projects } from "@/lib/projects-data"
+import { NextRequest, NextResponse } from "next/server";
+import { projects } from "@/lib/projects-data";
 
-export async function GET() {
-  // You can add logic here to filter, sort, or modify the projects data
-  // For example, you could fetch from a database instead of using the static data
+// Allow root domain and any subdomain of ishav.space
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  try {
+    const url = new URL(origin);
+    return url.hostname.endsWith(".ishav.space") || url.hostname === "ishav.space";
+  } catch {
+    return false;
+  }
+}
 
-  // Add a small delay to simulate network latency (optional)
-  await new Promise((resolve) => setTimeout(resolve, 300))
+export async function GET(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  const allowed = isAllowedOrigin(origin);
 
-  // Return the projects with proper headers
+  await new Promise((resolve) => setTimeout(resolve, 300)); // simulate delay
+
   return NextResponse.json(
     { projects, success: true },
     {
       headers: {
-        "Access-Control-Allow-Origin": "*", // Allow cross-origin requests
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300", // Cache for 60 seconds, stale for 5 minutes
+        "Access-Control-Allow-Origin": allowed && origin ? origin : "https://ishav.space", // fallback to main domain
+        "Vary": "Origin", // inform caches that response varies by origin
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
       },
-    },
-  )
+    }
+  );
 }
