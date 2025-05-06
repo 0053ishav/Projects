@@ -22,9 +22,19 @@ import FloatingTechBurst from "@/components/FloatingTechIcons";
 // Fetcher function for SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const iconMap: Record<string, string> = {
-  React: "/icons/React.svg",
+  "React.js": "/icons/React.svg",
   "Next.js": "/icons/Next.js.svg",
-  Tailwind: "/icons/Tailwind CSS.svg",
+  "Tailwind": "/icons/Tailwind.svg",
+  "Clerk": "/icons/Clerk.jpg",
+  "Appwrite": "/icons/Appwrite.svg",
+  "Chart.js": "/icons/Chart.js.svg",
+  "Drizzle": "/icons/Drizzle.png",
+  "Firebase": "/icons/Firebase.svg",
+  "Neon": "/icons/Neon.svg",
+  "Three.js": "/icons/Three.js.svg",
+  "Vite.js": "/icons/Vite.js.svg",
+  "Zod": "/icons/Zod.svg",
+  "TypeScript": "/icons/TypeScript.svg",
   // add more as needed
 }
 
