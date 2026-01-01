@@ -39,13 +39,13 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300"
           />
 
-          {project.featured && (
+          {/* {project.featured && (
             <div className="absolute top-3 right-3">
               <Badge variant="default" className="bg-primary/90 backdrop-blur-sm">
                 Featured
               </Badge>
             </div>
-          )}
+          )} */}
         </div>
 
         <CardContent className="flex-grow pt-6">

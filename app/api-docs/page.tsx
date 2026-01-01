@@ -1,18 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Copy, ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeIn, fadeInUp, staggerContainer } from "@/hooks/use-animations";
-import { toast } from "sonner";
+import { CopyButton } from "@/components/CopyButton";
 
 export default function ApiDocs() {
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard!");
-  };
-
   return (
     <>
       {/* Header */}
@@ -54,13 +49,21 @@ export default function ApiDocs() {
             <div className="sticky top-24">
               <h3 className="font-medium mb-3">Contents</h3>
               <motion.ul variants={staggerContainer} className="space-y-2">
-                {["introduction", "endpoints", "cors", "rate-limiting", "examples"].map((id) => (
+                {[
+                  "introduction",
+                  "endpoints",
+                  "cors",
+                  "rate-limiting",
+                  "examples",
+                ].map((id) => (
                   <motion.li key={id} variants={fadeInUp}>
                     <a
                       href={`#${id}`}
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {id.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                      {id
+                        .replace("-", " ")
+                        .replace(/\b\w/g, (l) => l.toUpperCase())}
                     </a>
                   </motion.li>
                 ))}
@@ -88,70 +91,74 @@ export default function ApiDocs() {
             variants={staggerContainer}
             className="prose max-w-none dark:prose-invert"
           >
-            <motion.section variants={fadeInUp} id="introduction">
+            <motion.section
+              variants={fadeInUp}
+              id="introduction"
+              className="mb-6"
+            >
               <h2>Introduction</h2>
               <p>
-                This API provides access to my portfolio projects data. It's
-                designed to be simple, fast, and easy to use in any application.
+                This API provides read-only access to my portfolio projects
+                data. It is backed by Appwrite, served through a secure gateway,
+                and optimized with edge caching for fast, reliable access across
+                all ishav.space properties.
               </p>
             </motion.section>
+
+            <hr />
 
             <motion.section
               variants={fadeInUp}
               id="endpoints"
               className="mt-10"
             >
-              <h2>Endpoints</h2>
+              <h2 className="mb-2">Endpoints</h2>
 
               <div className="bg-muted p-6 rounded-lg mb-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
+                  <div className="flex items-center truncate">
                     <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold mr-3">
                       GET
                     </span>
-                    <code className="font-mono text-lg">projects.ishav.space/api/projects</code>
+                    <code className="font-mono text-lg">
+                      https://projects.ishav.space/api/projects
+                    </code>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1"
-                    onClick={() => copyToClipboard("https://projects.ishav.space/api/projects")}
-                  >
-                    <Copy className="h-4 w-4" />
-                    Copy
-                  </Button>
+                 <CopyButton text="https://projects.ishav.space/api/projects" />
+
                 </div>
-                <p>Returns a list of all projects.</p>
+
+                <p>
+                  Returns a list of all <strong>published</strong> projects,
+                  ordered by priority. Data is cached at the edge and
+                  automatically updated via Appwrite webhooks.
+                </p>
 
                 <h4 className="font-medium mt-4 mb-2">Response</h4>
                 <div className="bg-background border rounded-md overflow-hidden">
                   <div className="flex items-center justify-between border-b px-4 py-2">
                     <span className="font-medium">Response</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-1 h-7"
-                      onClick={() =>
-                        copyToClipboard(`{
+<CopyButton
+  text={`{
   "success": true,
   "projects": [
     {
       "id": "project-id",
       "title": "Project Title",
       "description": "Project description",
-      "image": "/path/to/image.png",
-      "tags": ["Tag1", "Tag2"],
+      "image": "https://cloud.appwrite.io/v1/storage/buckets/{bucketId}/files/{fileId}/view?project={projectId}",
+      "tags": ["nextjs", "reactjs", "tailwind"],
       "demoLink": "https://demo.example.com",
       "codeLink": "https://github.com/username/repo",
       "featured": true
     }
   ]
-}`)
-                      }
-                    >
-                      <Copy className="h-3 w-3" />
-                      Copy
-                    </Button>
+}
+`}
+  size="sm"
+/>
+
+
                   </div>
                   <pre className="p-4 overflow-x-auto text-sm">{`{
   "success": true,
@@ -160,59 +167,68 @@ export default function ApiDocs() {
       "id": "project-id",
       "title": "Project Title",
       "description": "Project description",
-      "image": "/path/to/image.png",
-      "tags": ["Tag1", "Tag2"],
+      "image": "https://cloud.appwrite.io/v1/storage/buckets/{bucketId}/files/{fileId}/view?project={projectId}",
+      "tags": ["nextjs", "reactjs", "tailwind"],
       "demoLink": "https://demo.example.com",
       "codeLink": "https://github.com/username/repo",
       "featured": true
     }
   ]
-}`}</pre>
+}
+`}</pre>
                 </div>
               </div>
             </motion.section>
-
-            <motion.section variants={fadeInUp} id="cors" className="mt-10">
+            <hr />
+            <motion.section
+              variants={fadeInUp}
+              id="cors"
+              className="mt-10 mb-6 bg-muted p-6"
+            >
               <h2>Cross-Origin Resource Sharing</h2>
               <p>
-                This API supports Cross-Origin Resource Sharing (CORS) for all
-                origins. You can make requests to this API from any domain
-                without restrictions.
+                This API supports CORS for the root domain{" "}
+                <code className="mr-2">ishav.space</code>
+                 and all of its subdomains. Requests from unrelated domains are
+                not allowed.
+              </p>
+            </motion.section>
+
+            <hr />
+            <motion.section
+              variants={fadeInUp}
+              id="rate-limiting"
+              className="mt-10 mb-6 bg-muted p-6"
+            >
+              <h2>Rate Limiting</h2>
+              <p>
+                Requests are limited per IP to prevent abuse. Excessive requests
+                may receive a 
+                <span className="text-red-600 ml-2">
+                  429 Too Many Requests response.
+                  </span>
               </p>
             </motion.section>
 
             <motion.section
               variants={fadeInUp}
-              id="rate-limiting"
-              className="mt-10"
+              id="examples"
+              className="mt-10 mb-6 "
             >
-              <h2>Rate Limiting</h2>
-              <p>
-                Currently, there are no rate limits in place. However, please be
-                respectful and avoid making excessive requests to the API.
-              </p>
-            </motion.section>
+              <h2 className="mb-2">Example Usage</h2>
 
-            <motion.section variants={fadeInUp} id="examples" className="mt-10">
-              <h2>Example Usage</h2>
-
-              <h4 className="font-medium mt-4 mb-2">TypeScript (Fetch)</h4>
               <div className="bg-background border rounded-md overflow-hidden mb-6">
-                <div className="flex items-center justify-between border-b px-4 py-2">
-                  <span className="font-medium">TypeScript</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 h-7"
-                    onClick={() => copyToClipboard(`// Using fetch with TypeScript
-interface Project {
+                <div className="flex items-center justify-between border-b px-4 py-2 bg-muted p-6">
+                  <span className="font-medium ">TypeScript</span>
+                  <CopyButton
+  text={`interface Project {
   id: string;
   title: string;
   description: string;
-  image: string;
+  image: string; // Appwrite Storage URL
   tags: string[];
   demoLink: string;
-  codeLink: string;
+  codeLink?: string;
   featured?: boolean;
 }
 
@@ -221,23 +237,24 @@ interface ApiResponse {
   projects: Project[];
 }
 
-fetch('https://projects.ishav.space/api/projects')
-  .then(response => response.json())
-  .then((data: ApiResponse) => console.log(data.projects));`)}
-                  >
-                    <Copy className="h-3 w-3" />
-                    Copy
-                  </Button>
+fetch("https://projects.ishav.space/api/projects")
+  .then((res) => res.json())
+  .then((data: ApiResponse) => {
+    console.log(data.projects);
+  });
+`}
+  size="sm"
+/>
+
                 </div>
-                <pre className="p-4 overflow-x-auto text-sm">{`// Using fetch with TypeScript
-interface Project {
+                <pre className="p-4 overflow-x-auto text-sm">{`interface Project {
   id: string;
   title: string;
   description: string;
-  image: string;
+  image: string; // Appwrite Storage URL
   tags: string[];
   demoLink: string;
-  codeLink: string;
+  codeLink?: string;
   featured?: boolean;
 }
 
@@ -246,94 +263,12 @@ interface ApiResponse {
   projects: Project[];
 }
 
-fetch('https://projects.ishav.space/api/projects')
-  .then(response => response.json())
-  .then((data: ApiResponse) => console.log(data.projects));`}</pre>
-              </div>
-
-              <h4 className="font-medium mt-4 mb-2">React with SWR</h4>
-              <div className="bg-background border rounded-md overflow-hidden">
-                <div className="flex items-center justify-between border-b px-4 py-2">
-                  <span className="font-medium">TypeScript</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 h-7"
-                    onClick={() => copyToClipboard(`// Using SWR with TypeScript
-import useSWR from 'swr';
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  demoLink: string;
-  codeLink: string;
-  featured?: boolean;
-}
-
-interface ApiResponse {
-  success: boolean;
-  projects: Project[];
-}
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-function ProjectsList() {
-  const { data, error } = useSWR<ApiResponse>('https://projects.ishav.space/api/projects', fetcher);
-  
-  if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
-  
-  return (
-    <div>
-      {data.projects.map(project => (
-        <div key={project.id}>{project.title}</div>
-      ))}
-    </div>
-  );
-}`)}
-                  >
-                    <Copy className="h-3 w-3" />
-                    Copy
-                  </Button>
-                </div>
-                <pre className="p-4 overflow-x-auto text-sm">{`// Using SWR with TypeScript
-import useSWR from 'swr';
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  demoLink: string;
-  codeLink: string;
-  featured?: boolean;
-}
-
-interface ApiResponse {
-  success: boolean;
-  projects: Project[];
-}
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-function ProjectsList() {
-  const { data, error } = useSWR<ApiResponse>('https://projects.ishav.space/api/projects', fetcher);
-  
-  if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
-  
-  return (
-    <div>
-      {data.projects.map(project => (
-        <div key={project.id}>{project.title}</div>
-      ))}
-    </div>
-  );
-}`}</pre>
+fetch("https://projects.ishav.space/api/projects")
+  .then((res) => res.json())
+  .then((data: ApiResponse) => {
+    console.log(data.projects);
+  });
+`}</pre>
               </div>
             </motion.section>
 

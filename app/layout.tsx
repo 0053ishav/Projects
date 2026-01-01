@@ -4,7 +4,7 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import NavBar from "@/components/nav-bar"
 import Footer from "@/components/footer"
-// import FloatingTechIcons from "@/components/FloatingTechIcons"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -70,11 +70,11 @@ export default function RootLayout({
             <NavBar />
 
             <main className="flex-1">{children}
-               {/* <FloatingTechIcons /> */}
                </main>
             <Footer />
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

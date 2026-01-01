@@ -1,6 +1,6 @@
 "use client"
 
-import { GithubIcon, LinkedinIcon, ExternalLinkIcon } from "lucide-react"
+import { GithubIcon, LinkedinIcon, ExternalLinkIcon, Mail } from "lucide-react"
 import { motion } from "framer-motion"
 import { fadeInUp } from "@/hooks/use-animations"
 
@@ -28,6 +28,16 @@ export default function Footer() {
             <div className="flex flex-col space-y-2">
               <motion.a
                 whileHover={{ x: 5 }}
+                href="https://mail.ishav.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                Mail
+              </motion.a>
+              <motion.a
+                whileHover={{ x: 5 }}
                 href="https://github.com/0053ishav"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -48,13 +58,23 @@ export default function Footer() {
               </motion.a>
               <motion.a
                 whileHover={{ x: 5 }}
-                href="https://portfolio.ishav.space"
+                href="https://ishav.space"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ExternalLinkIcon className="h-4 w-4" />
-                Portfolio
+                Ishav.space
+              </motion.a>
+              <motion.a
+                whileHover={{ x: 5 }}
+                href="https://ishavthinks.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ExternalLinkIcon className="h-4 w-4" />
+                 Ishav thinks
               </motion.a>
             </div>
           </motion.div>

@@ -1,26 +1,42 @@
 # 🧠 Projects Showcase – Developer Portfolio API
 
-Welcome to the **Projects Showcase** repository! This project contains a public API to demonstrate how you can structure and expose your portfolio data. It's designed for **learning purposes**, enabling other developers to create their own project showcases by using this as inspiration.
+Welcome to the **Projects Showcase** repository.
 
-> ⚠️ **Note**: The API is **publicly accessible** only for demo and educational purposes. You can study the code and see how the API works, but only I (the author) will use the API across my subdomains in production.
+This project powers a **read-only, production-grade portfolio API**, backed by **Appwrite**, served through a **secure gateway**, and optimized with **edge caching and rate limiting**.
+
+It demonstrates how real portfolio APIs are designed — not just how data is returned.
+
+> ⚠️ **Important**  
+> This API is publicly readable for demonstration purposes, but the **data itself is private and owned by me**.  
+> Only my own subdomains consume this API in production.
 
 
+## 🚀 Live API Documentation
 
-## 🚀 API Documentation
+👉 **Docs:** https://projects.ishav.space/
 
-Full documentation: [projects.ishav.space](https://projects.ishav.space/)
-
-Explore how a project showcase API is built, organized, and consumed in real-world applications.
-
+The documentation covers:
+- API structure
+- Response shape
+- CORS rules
+- Rate limiting
+- Usage examples
 
 
 ## 🌐 Public API
 
 ### 📍 Available Endpoint
 
-- `GET https://projects.ishav.space/api/projects` – Fetches a list of all portfolio projects.
 
-**Example response:**
+- `GET https://projects.ishav.space/api/projects` – Returns a list of all **published** portfolio projects.
+
+- Backed by Appwrite Database
+- Images served from Appwrite Storage
+- Cached at the edge
+- Auto-updated via webhooks
+
+
+## 📦 Example Response
 
 ```json
 {
@@ -30,8 +46,8 @@ Explore how a project showcase API is built, organized, and consumed in real-wor
       "id": "project-id",
       "title": "Project Title",
       "description": "Project description",
-      "image": "/path/to/image.png",
-      "tags": ["Tag1", "Tag2"],
+      "image": "https://cloud.appwrite.io/v1/storage/buckets/{bucketId}/files/{fileId}/view?project={projectId}",
+      "tags": ["nextjs", "react", "tailwind"],
       "demoLink": "https://demo.example.com",
       "codeLink": "https://github.com/username/repo",
       "featured": true
@@ -41,17 +57,19 @@ Explore how a project showcase API is built, organized, and consumed in real-wor
 ```
 
 ### 📦 Response Structure
-
+---
 Each project contains:
 
 - `id`: Unique project ID
 - `title`: Project name
 - `description`: Short project overview
-- `image`: Thumbnail or screenshot
+- `image`: Public Appwrite Storage URL
 - `tags`: Technologies or keywords
 - `demoLink`: Live demo URL
 - `codeLink`: GitHub or source repo
-- `featured`: Boolean for homepage highlighting
+- `featured`: Highlighted project flag
+
+Only projects with status = published are returned.
 
 
 ## 🧪 Usage Example
@@ -66,13 +84,18 @@ interface Project {
   image: string;
   tags: string[];
   demoLink: string;
-  codeLink: string;
+  codeLink?: string;
   featured?: boolean;
 }
 
-fetch('https://projects.ishav.space/api/projects')
-  .then(res => res.json())
-  .then((data: { success: boolean; projects: Project[] }) => {
+interface ApiResponse {
+  success: boolean;
+  projects: Projects[];
+}
+
+fetch("https://projects.ishav.space/api/projects")
+  .then((res) => res.json())
+  .then((data: ApiResponse) => {
     console.log(data.projects);
   });
 ```
@@ -100,69 +123,70 @@ function ProjectList() {
 }
 ```
 
-## 🔐 CORS & Ownership Clarification
+## 🔐 CORS & Access Policy
 
-While this API supports **CORS for all origins** for demonstration and testing purposes, the **project data is strictly mine**.
+This API does not allow all origins.
 
-> ❗️The API is *not meant* to be integrated into third-party portfolios or apps.  
-> It’s open only so others can see how a real-world portfolio API works.
+✅ Allowed :
 
-### 📦 Data Ownership
+  - ishav.space
 
-- All project entries served through this API are **owned by me** (`ishav`).
-- This API is used **only across my own subdomains** and personal projects.
-- You’re welcome to study the API structure, logic, and code to build your own version.
+  - Any *.ishav.space subdomain
 
-### 🧰 Why CORS Is Enabled
+❌ Blocked : 
 
-CORS is enabled to:
-- Allow frontend testing and demos
-- Let developers experiment with sample calls
-- Help others understand how portfolio data APIs function
+  - Unrelated third-party domains
 
+> This ensures the API is protected from misuse while remaining usable across my own properties.
 
-## 👨‍💻 Featured Projects (Add Yours)
-
-Below is a template to add your own projects:
-
-### 📌 Project 1 – [Your Project Title](#)
-
-- **Description**: One-liner about what the project does.
-- **Tech Stack**: React, Express, PostgreSQL
-- **Highlights**: Key features or innovations
-- **Code**: [GitHub Repo](#)
-
-
-## 🛠️ Technical Overview
-
-- **Framework**: Next.js (API Routes + SSR)
-- **Language**: TypeScript
-- **Frontend Compatibility**: Works with any frontend (React, Vue, HTML)
-- **Dev Tools**: SWR, Fetch, REST APIs
-- **Hosting**: Vercel (or any Node-compatible host)
-
+### 🚦Rate Limiting
 ---
 
-### 🧑‍🎓 Build Your Own
+To prevent abuse and basic DDoS attempts:
+
+- Requests are rate-limited per IP
+
+- Excessive requests return:
+  > 429 Too Many Requests
+Responses are edge-cached to minimize backend load.
+
+## 🛠️ Technical Overview
+---
+- **Framework**: Next.js (App Router, API Routes)
+- **Language**: TypeScript
+- **Backend**: Appwrite (DB + Storage) 
+- **Gateway**: Server-only API with API key
+- **Caching**: Vercel Edge Cache
+- **Security**:No client-side secrets
+
+CORS restrictions
+
+Rate limiting
+
+Webhook-based cache invalidation
+- **Hosting**: Vercel
 
 
-You're free to:
-- **Fork the repo**
-- **Study the API route logic** (`/api/projects`)
-- **Customize `project-data.ts`** with your own data
-- **Deploy your version independently**
+### 🧑‍🎓 Learn From This Project
+---
 
-Please **do not** use my actual API or project data in your applications.
+You are encouraged to:
+- Fork the repository
+- Study the API gateway pattern
+- Learn Appwrite + caching + webhooks
+- Build your own portfolio API
+
+🚫 Please **do not** use my live API or data in your applications.
 
 
 
 ## 📞 Contact
-
+---
 Have questions or need help?
 
 - GitHub: [@0053ishav](https://github.com/0053ishav)
-- Email: [My Mail 📧](https://mail.ishav.space)
+- Email: [Public Mail 📧](https://mail.ishav.space)
 
----
+
 
                  Made with ❤️ by Ishav-  Bring creative ideas to life

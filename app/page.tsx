@@ -41,7 +41,6 @@ const iconMap: Record<string, string> = {
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [useExternalApi, setUseExternalApi] = useState(false);
-  const [showApiUrl, setShowApiUrl] = useState(false);
 
   // Determine which API endpoint to use
   const apiUrl = useExternalApi
@@ -67,19 +66,6 @@ export default function Home() {
   // Handle filter change
   const handleFilterChange = (tag: string) => {
     setActiveFilter(activeFilter === tag ? null : tag);
-  };
-
-  // Toggle between local and external API
-  const handleApiToggle = () => {
-    setUseExternalApi((prev) => {
-      const newState = !prev;
-      if (newState) {
-        setShowApiUrl(true);
-      } else {
-        setShowApiUrl(false);
-      }
-      return newState;
-    });
   };
 
   if (error)
@@ -180,60 +166,23 @@ export default function Home() {
               <p className="text-muted-foreground">
                 Explore my latest work and personal projects
               </p>
+                            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={staggerContainer}
+                className="grid grid-cols-12 md:grid-cols-2 lg:grid-cols-3
+                 gap-6 mt-8"
+              >
+                {projects?.filter((project)  => project.featured)
+                .map((project, index) => (
+                  <ProjectCard 
+                    key={project.id || index}
+                    project={project}
+                    index={index}
+                  />
+                ))}
+              </motion.div>
             </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, ease: "easeOut" }}
-              className="flex flex-col md:items-center mt-4 md:mt-0 space-y-4 md:space-y-0 "
-            >
-              {/* API Toggle */}
-              <div className="flex flex-row md:flex-row-reverse md:space-x-4 items-center space-x-2 bg-muted/50 p-2 rounded-lg">
-                <Switch
-                  id="api-toggle"
-                  checked={useExternalApi}
-                  onCheckedChange={handleApiToggle}
-                />
-                <Label htmlFor="api-toggle" className="text-sm md:pr-4">
-                Using {useExternalApi ? "External" : "Local"} API 
-                </Label>
-              </div>
-
-              {/* Fixed-height wrapper prevents CLS */}
-              <div className="relative min-h-[48px] w-full">
-                <AnimatePresence>
-                  {showApiUrl && (
-                    <motion.div
-                      key="api-url-banner"
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute left-0 top-0 w-full bg-blue-100 text-blue-800 border border-blue-300 font-mono px-4 py-2 rounded-md flex items-center space-x-2"
-                    >
-                      <span className="text-xs truncate">
-                        API:{" "}
-                        <a
-                          href={apiUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline text-blue-600 hover:text-blue-800"
-                        >
-                          {apiUrl}
-                        </a>
-                      </span>
-                      <button
-                        onClick={() => setShowApiUrl(false)}
-                        className="ml-2 hover:text-red-500"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
           </motion.div>
 
           {isLoading ? (
