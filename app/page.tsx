@@ -40,7 +40,7 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   // Determine which API endpoint to use
-  const apiUrl = process.env.API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
   // Fetch projects data using SWR
   const { data, error, isLoading, mutate } = useSWR(apiUrl, fetcher);
