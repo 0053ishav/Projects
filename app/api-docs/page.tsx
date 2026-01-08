@@ -147,7 +147,7 @@ export default function ApiDocs() {
       "title": "Project Title",
       "description": "Project description",
       "image": "https://cloud.appwrite.io/v1/storage/buckets/{bucketId}/files/{fileId}/view?project={projectId}",
-      "tags": ["nextjs", "reactjs", "tailwind"],
+      "tech": ["nextjs", "reactjs", "tailwind"],
       "demoLink": "https://demo.example.com",
       "codeLink": "https://github.com/username/repo",
       "featured": true
@@ -168,7 +168,7 @@ export default function ApiDocs() {
       "title": "Project Title",
       "description": "Project description",
       "image": "https://cloud.appwrite.io/v1/storage/buckets/{bucketId}/files/{fileId}/view?project={projectId}",
-      "tags": ["nextjs", "reactjs", "tailwind"],
+      "tech": ["nextjs", "reactjs", "tailwind"],
       "demoLink": "https://demo.example.com",
       "codeLink": "https://github.com/username/repo",
       "featured": true
@@ -226,7 +226,7 @@ export default function ApiDocs() {
   title: string;
   description: string;
   image: string; // Appwrite Storage URL
-  tags: string[];
+  tech: string[];
   demoLink: string;
   codeLink?: string;
   featured?: boolean;
@@ -252,7 +252,7 @@ fetch("https://projects.ishav.space/api/projects")
   title: string;
   description: string;
   image: string; // Appwrite Storage URL
-  tags: string[];
+  tech: string[];
   demoLink: string;
   codeLink?: string;
   featured?: boolean;

@@ -60,7 +60,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
           </motion.p>
 
           <motion.div className="flex flex-wrap gap-2 mt-auto" variants={tagVariants}>
-            {project.tags.map((tag, idx) => (
+            {project.tech.map((tag, idx) => (
               <motion.div key={idx} variants={tagVariants} custom={idx}>
                 <Badge variant="secondary" className="text-xs font-medium">
                   {tag}

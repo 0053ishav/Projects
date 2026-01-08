@@ -8,17 +8,17 @@ import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer, tagVariants } from "@/hooks/use-animations"
 
 interface FilterBarProps {
-  tags: string[]
+  tech: string[]
   activeFilter: string | null
   onFilterChange: (tag: string) => void
 }
 
-export default function FilterBar({ tags, activeFilter, onFilterChange }: FilterBarProps) {
+export default function FilterBar({ tech, activeFilter, onFilterChange }: FilterBarProps) {
   const [showAll, setShowAll] = useState(false)
 
-  // Show only first 8 tags unless "Show All" is clicked
-  const visibleTags = showAll ? tags : tags.slice(0, 8)
-  const hasMoreTags = tags.length > 8
+  // Show only first 8 tech unless "Show All" is clicked
+  const visibleTags = showAll ? tech : tech.slice(0, 8)
+  const hasMoreTags = tech.length > 8
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="mb-8">
@@ -63,7 +63,7 @@ export default function FilterBar({ tags, activeFilter, onFilterChange }: Filter
               onClick={() => setShowAll(true)}
               className="rounded-full text-xs font-medium"
             >
-              +{tags.length - 8} more
+              +{tech.length - 8} more
             </Button>
           </motion.div>
         )}

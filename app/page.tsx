@@ -6,9 +6,7 @@ import ProjectCard from "@/components/project-card";
 import FilterBar from "@/components/filter-bar";
 import { Loader2, RefreshCw, Code, Database, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   fadeIn,
   fadeInUp,
@@ -40,12 +38,9 @@ const iconMap: Record<string, string> = {
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [useExternalApi, setUseExternalApi] = useState(false);
 
   // Determine which API endpoint to use
-  const apiUrl = useExternalApi
-    ? "https://projects.ishav.space/api/projects"
-    : "/api/projects";
+  const apiUrl = process.env.API_URL
 
   // Fetch projects data using SWR
   const { data, error, isLoading, mutate } = useSWR(apiUrl, fetcher);
@@ -55,12 +50,12 @@ export default function Home() {
 
   // Extract unique tags from all projects
   const allTags = projects
-    ? Array.from(new Set(projects.flatMap((project) => project.tags))).sort()
+    ? Array.from(new Set(projects.flatMap((project) => project.tech))).sort()
     : [];
 
   // Filter projects based on active filter
   const filteredProjects = activeFilter
-    ? projects?.filter((project) => project.tags.includes(activeFilter))
+    ? projects?.filter((project) => project.tech.includes(activeFilter))
     : projects;
 
   // Handle filter change
@@ -201,7 +196,7 @@ export default function Home() {
             <>
               {allTags.length > 0 && (
                 <FilterBar
-                  tags={allTags}
+                  tech={allTags}
                   activeFilter={activeFilter}
                   onFilterChange={handleFilterChange}
                 />
