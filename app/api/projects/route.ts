@@ -11,43 +11,43 @@ const bucketId = process.env.APPWRITE_BUCKET_ID!;
 
 
 // Allow root domain and any subdomain of ishav.space
-function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return false;
-  try {
-    const url = new URL(origin);
-    return url.hostname.endsWith(".ishav.space") || url.hostname === "ishav.space";
-  } catch {
-    return false;
-  }
-}
-
 // function isAllowedOrigin(origin: string | null): boolean {
-//   if (!origin) return false;
-
+//   if (!origin) return true;
 //   try {
 //     const url = new URL(origin);
-
-//     // ✅ production
-//     if (
-//       url.hostname === "ishav.space" ||
-//       url.hostname.endsWith(".ishav.space")
-//     ) {
-//       return true;
-//     }
-
-//     // ✅ local development
-//     if (
-//       process.env.NODE_ENV === "development" &&
-//       (url.hostname === "localhost" || url.hostname === "127.0.0.1")
-//     ) {
-//       return true;
-//     }
-
-//     return false;
+//     return url.hostname.endsWith(".ishav.space") || url.hostname === "ishav.space";
 //   } catch {
 //     return false;
 //   }
 // }
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return true;
+
+  try {
+    const url = new URL(origin);
+
+    // ✅ production
+    if (
+      url.hostname === "ishav.space" ||
+      url.hostname.endsWith(".ishav.space")
+    ) {
+      return true;
+    }
+
+    // ✅ local development
+    if (
+      process.env.NODE_ENV === "development" &&
+      (url.hostname === "localhost" || url.hostname === "127.0.0.1")
+    ) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
@@ -95,11 +95,11 @@ export async function GET(req: NextRequest) {
     { projects, success: true },
     {
       headers: {
-        "Access-Control-Allow-Origin":
-          allowed && origin ? origin : "https://ishav.space",
-        "Vary": "Origin",
-        "Cache-Control": "public, s-maxage=600, stale-while-revalidate=300",
+        "Access-Control-Allow-Origin": allowed && origin ? origin : "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Credentials": "true",
+        "Vary": "Origin",
       },
     }
   );
